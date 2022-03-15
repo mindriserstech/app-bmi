@@ -10,18 +10,42 @@
 
     <title>{{ page_title }}</title>
   </head>
+  <style>
+    .dropdown-menu[data-bs-popper] {
+        top: 100%;
+        left: -74px !important;
+        margin-top: .7rem !important;
+      }
+  </style>
   <body>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand">{{ brand }}</a>
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Settings
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'user.logout' %}">Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
     <div class="container-fluid mt-5">
-      <span class="alert alert-success">{{ msg }}</span>
+      <div class="alert alert-success text-center">Welcome <strong class="text-uppercase">{{ data.first_name }}</strong></div>
 
       <!-- to hide html code that is send from the server -->
       {% autoescape off %}

@@ -1,4 +1,7 @@
 from atexit import register
+from cgitb import reset
+import email
+from winreg import REG_QWORD
 from django.shortcuts import render
 from django.http import HttpResponse
 
@@ -12,14 +15,36 @@ from appbmi.models import BmiUser, UserBmi, UserDiet
 
 # user views
 def user_index(request):
-    template = 'users/index.html'
-    url = 'user.login'
-    content = {
-        'msg': 'Welcome to BMI',
-        'brand' : 'BMI',
-        'page_title': 'BMI | Dashboard',
+    if request.session.has_key('session_email'):
+        user = BmiUser.objects.get(user_email=request.session['session_email'])
+        template = 'users/index.html'
+        context = {
+            'page_title': 'BMI | Index',
+            'brand': 'BMI',
+            'data': user
+        }
+        return render(request, template, context)
+    else:
+        template = 'users/login.html'
+        ul = BmiUserLoginForm()
+        context = {
+            'form': ul,
+            'title': 'BMI | Login',
+            'msg': 'Acess Forbidden'
+        }
+        return render(request, template, context)
+
+def user_logout(request):
+    del request.session['session_email']
+    template = 'users/login.html'
+    ul = BmiUserLoginForm()
+    context = {
+        'form': ul,
+        'title': 'BMI | Login',
+        'msg_success': 'Logout Success'
     }
-    return render(request, template, content)
+    return render(request, template, context)
+
 
 def user_login(request):
     template = 'users/login.html'
@@ -33,12 +58,25 @@ def user_login(request):
         try:
             user = BmiUser.objects.get(user_email=email)
             if password == user.password:
-                template = 'users/index.html'
-                context = {
-                    'title': 'BMI | Index',
-                    'msg': 'Login Success'
-                }
-                return render(request, template, context)
+                # storing session
+                request.session['session_email'] = user.user_email
+
+                # checking session 
+                if request.session.has_key('session_email'):
+                    template = 'users/index.html'
+                    context = {
+                        'page_title': 'BMI | Index',
+                        'brand': 'BMI',
+                        'data': user
+                    }
+                    return render(request, template, context)
+                else:
+                    context = {
+                        'form': ul,
+                        'title': 'BMI | Login',
+                        'msg': 'Email or password invalid'
+                    }
+                    return render(request, template, context)
             else:
                 context = {
                     'form': ul,
@@ -76,15 +114,16 @@ def user_create(request):
         uname = request.POST.get('username')
         passwd = request.POST.get('password')
         
-        umail = BmiUser.objects.get(user_email=email)
-        if umail:
-            context = {
-                'form': rf,
-                'title': 'BMI | Registration',
-                'msg': 'Email already taken'
-            }
+        try:
+            umail = BmiUser.objects.get(user_email=email)
+            if umail:
+                context = {
+                    'form': rf,
+                    'title': 'BMI | Registration',
+                    'msg': 'Email already taken'
+                }
             return render(request, template, context)
-        else:
+        except:
             # to store data in database
             try:
                 user = BmiUser()
