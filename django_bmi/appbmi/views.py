@@ -1,6 +1,7 @@
 from atexit import register
 from cgitb import reset
 import email
+from re import template
 from winreg import REG_QWORD
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -44,6 +45,26 @@ def user_logout(request):
         'msg_success': 'Logout Success'
     }
     return render(request, template, context)
+
+def user_profile(request):
+    if request.session.has_key('session_email'):
+        user = BmiUser.objects.get(user_email=request.session['session_email'])
+        template = 'users/show.html'
+        context = {
+            'page_title': 'BMI | User Profile',
+            'brand': 'BMI',
+            'data': user
+        }
+        return render(request, template, context)
+    else:
+        template = 'users/login.html'
+        ul = BmiUserLoginForm()
+        context = {
+            'form': ul,
+            'title': 'BMI | Login',
+            'msg': 'Email or password invalid'
+        }
+        return render()
 
 
 def user_login(request):
