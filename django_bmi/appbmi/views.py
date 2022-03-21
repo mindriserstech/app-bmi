@@ -66,6 +66,32 @@ def user_profile(request):
         }
         return render()
 
+def user_update(request):
+    template = 'users/show.html'
+
+    if request.method == "POST":
+        user = BmiUser.objects.get(user_email=request.session['session_email'])
+        user.first_name = request.POST.get('first_name')
+        user.middle_name = request.POST.get('middle_name')
+        user.last_name = request.POST.get('last_name')
+        user.user_email = request.POST.get('user_email')
+        user.username = request.POST.get('username')
+        user.save()
+        context = {
+            'page_title': 'BMI | User Profile',
+            'brand': 'BMI',
+            'data': user,
+            'msg_success': 'Updated successfully'
+        }
+        return render(request, template, context)
+    else:
+        context = {
+            'page_title': 'BMI | User Profile',
+            'brand': 'BMI',
+            'data': user,
+            'msg_error': 'Something went wrong'
+        }
+        return render(request, template, context)
 
 def user_login(request):
     template = 'users/login.html'

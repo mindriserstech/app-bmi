@@ -1,16 +1,14 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends '../layouts/base.html' %}
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<!-- section title -->
+{% block title %}
+{{ page_title }}
+{% endblock %}
+<!-- end of section title -->
 
-    <title>{{ page_title }}</title>
-  </head>
-  <style>
+<!-- section custom css -->
+{% block custom_css %}
+<style>
     .dropdown-menu[data-bs-popper] {
         top: 100%;
         left: -74px !important;
@@ -42,116 +40,100 @@
     #edit-form, #show {
         display: none;
     }
-  </style>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand">{{ brand }}</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Settings
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                <li><a class="dropdown-item" href="{% url 'user.profile' %}">Profile</a></li>
-                <li><a class="dropdown-item" href="{% url 'user.logout' %}">Logout</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <div class="container-fluid mt-5">
-        <div class="row">
-            <div class="col-4 offset-3">
-                <div class="card">
-                    <div class="card-header">
-                        <img src="https://pbs.twimg.com/media/EISlEQeW4AEbykd?format=jpg&name=medium" alt="Rajesh hamal" class="img-fluid">
-                        <form action="#">
-                            <div class="form-group mb-2">
-                                <label for="file">Update Profile</label>
-                                <input type="file" class="form-control mt-2">
+</style>
+{% endblock %}
+<!-- end of section custom css -->
+
+<!-- section content -->
+{% block content %}
+    <div class="row">
+        <div class="col-4 offset-3">
+            <div class="card">
+                <div class="card-header">
+                    <img src="https://pbs.twimg.com/media/EISlEQeW4AEbykd?format=jpg&name=medium" alt="Rajesh hamal" class="img-fluid">
+                    <form action="#">
+                        <div class="form-group mb-2">
+                            <label for="file">Update Profile</label>
+                            <input type="file" class="form-control mt-2">
+                        </div>
+                        <div class="form-group mt-2">
+                            <input type="submit" value="UPLOAD" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <div id="show-data">
+                        <h4>Name:- <strong class="text-uppercase">{{ data.first_name }} {% if not data.middle_name == None %} {{ data.middle_name }} {% endif %} {{ data.last_name }}</strong></h4>
+                        <h4>Email:- <strong class="text-uppercase">{{ data.user_email }}</strong></h4>
+                        <h4>Username:- <strong class="text-uppercase">{{ data.username }}</strong></h4>
+                    </div>
+                    <div id="edit-form">
+                        <form action="{% url 'user.update' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group mb-3">
+                                <label for="first_name" class="mb-2">First Name</label>
+                                <input type="text" name="first_name" class="form-control" value="{{ data.first_name }}">
                             </div>
-                            <div class="form-group mt-2">
-                                <input type="submit" value="UPLOAD" class="btn btn-primary">
+                            <div class="form-group mb-3">
+                                <label for="middle_name" class="mb-2">Middle Name</label>
+                                <input type="text" name="middle_name" class="form-control" value="{% if not data.middle_name == None %} {{ data.middle_name }} {% endif %}">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="last_name" class="mb-2">Last Name</label>
+                                <input type="text" name="last_name" class="form-control" value="{{ data.last_name }}">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="user_email" class="mb-2">Email</label>
+                                <input type="text" name="user_email" class="form-control" value="{{ data.user_email }}">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="username" class="mb-2">Username</label>
+                                <input type="text" name="username" class="form-control" value="{{ data.username }}">
+                            </div>
+                            <div class="form-group mb-3">
+                                <input type="submit" value="UPDATE" class="btn btn-primary">
                             </div>
                         </form>
                     </div>
-                    <div class="card-body">
-                        <div id="show-data">
-                            <h4>Name:- <strong class="text-uppercase">{{ data.first_name }} {{ data.last_name }}</strong></h4>
-                            <h4>Email:- <strong class="text-uppercase">{{ data.user_email }}</strong></h4>
-                            <h4>Username:- <strong class="text-uppercase">{{ data.username }}</strong></h4>
-                        </div>
-                        <div id="edit-form">
-                            <form action="#" method="POST">
-                                {% csrf_token %}
-                                <div class="form-group mb-3">
-                                    <label for="first_name" class="mb-2">First Name</label>
-                                    <input type="text" class="form-control" value="{{ data.first_name }}">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="middle_name" class="mb-2">Middle Name</label>
-                                    <input type="text" name="middle_name" class="form-control" value="{{ data.middle_name }}">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="last_name" class="mb-2">Last Name</label>
-                                    <input type="text" name="last_name" class="form-control" value="{{ data.last_name }}">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="user_email" class="mb-2">Email</label>
-                                    <input type="text" name="user_email" class="form-control" value="{{ data.user_email }}">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="username" class="mb-2">Username</label>
-                                    <input type="text" name="username" class="form-control" value="{{ data.username }}">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <input type="submit" value="UPDATE" class="btn btn-primary">
-                                </div>
-                            </form>
-                        </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary" id="edit">EDIT</a>
+                    <a href="#" class="btn btn-primary" id="show">SHOW</a>
+                    {% if msg_error %}
+                    <div class="alert alert-danger mt-2">
+                        {{ msg_error }}
                     </div>
-                    <div class="card-footer">
-                        <a href="#" class="btn btn-primary" id="edit">EDIT</a>
-                        <a href="#" class="btn btn-primary" id="show">SHOW</a>
+                    {% elif msg_success %}
+                    <div class="alert alert-success mt-2">
+                        {{ msg_success }}
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+<!-- end of section content -->
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    
-    <!-- jquery cdn -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <script>
-        $(document).ready(function(){
-            $('#edit').click(function(){
-                $('#edit-form').show();
-                $('#show').show();
-                $('#show-data').hide();
-                $('#edit').hide();
-            });
-
-            $('#show').click(function(){
-                $('#edit-form').hide();
-                $('#show').hide();
-                $('#show-data').show();
-                $('#edit').show();
-            });
+<!-- section custom js -->
+{% block custom_script %}
+<script>
+    $(document).ready(function(){
+        $('#edit').click(function(){
+            $('#edit-form').show();
+            $('#show').show();
+            $('#show-data').hide();
+            $('#edit').hide();
         });
-    </script>
-</body>
-</html>
+
+        $('#show').click(function(){
+            $('#edit-form').hide();
+            $('#show').hide();
+            $('#show-data').show();
+            $('#edit').show();
+        });
+    });
+</script>
+{% endblock %}
+<!-- end of section custom js -->
+
