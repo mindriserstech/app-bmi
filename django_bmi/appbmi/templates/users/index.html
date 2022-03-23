@@ -20,6 +20,7 @@
 
 <!-- section content -->
 {% block content %}
+<h3><a href="{% url 'user.email' %}">Send Email</a></h3>
   <div class="alert alert-success text-center">Welcome <strong class="text-uppercase">{{ data.first_name }}</strong></div>
 {% endblock %}
 <!-- end of section content -->

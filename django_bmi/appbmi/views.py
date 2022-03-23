@@ -1,10 +1,14 @@
 from atexit import register
 from cgitb import reset
 import email
-from re import template
+from re import sub, template
 from winreg import REG_QWORD
 from django.shortcuts import render
 from django.http import HttpResponse
+
+# importing email classes
+from django.core.mail import send_mail
+from django.conf import settings
 
 # form class import
 from appbmi.form import BmiUserRegistrationForm, BmiUserLoginForm
@@ -15,6 +19,22 @@ from appbmi.models import BmiUser, UserBmi, UserDiet
 # Create your views here.
 
 # user views
+# email send
+def sendemail(request):
+
+    # post method
+    # subject = request.POST.get('subject')
+    # message = request.POST.get('message')
+    
+    subject = 'TEST DEMO of SEND EMAIL'
+    message = 'This is a peaceful country'
+    email_from = settings.EMAIL_HOST_USER
+    recepient_list = ['izvirzl@gmail.com']
+
+    send_mail(subject, message, email_from, recepient_list)
+
+    return redirect('users/index')
+
 def user_index(request):
     if request.session.has_key('session_email'):
         user = BmiUser.objects.get(user_email=request.session['session_email'])
