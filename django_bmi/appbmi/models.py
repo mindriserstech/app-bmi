@@ -11,9 +11,14 @@ class BmiUser(models.Model):
     username = models.CharField(max_length=100)
     user_email = models.EmailField(unique=True)
     password = models.CharField(max_length=100)
+    profile_url = models.FileField(upload_to='users/profile/')
+    updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "bmi_users"
+    
+    def __str__(self):
+        return self.first_name
 
 class UserDiet(models.Model):
     bmi_index_range = models.CharField(max_length=10)
@@ -21,6 +26,9 @@ class UserDiet(models.Model):
 
     class Meta:
         db_table = "bmi_diet"
+    
+    def __str__(self):
+        return self.bmi_index_range
 
 class UserBmi(models.Model):
     weight = models.CharField(max_length=20)
@@ -32,6 +40,9 @@ class UserBmi(models.Model):
 
     class Meta:
         db_table = "bmi_userbmi"
+    
+    def __str__(self):
+        return self.bmi
 
 class UserBmiLog(models.Model):
     bmi_id = models.BigIntegerField()

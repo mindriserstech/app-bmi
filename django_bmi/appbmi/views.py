@@ -3,7 +3,7 @@ from cgitb import reset
 import email
 from re import sub, template
 from winreg import REG_QWORD
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 
 # importing email classes
@@ -11,12 +11,37 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 # form class import
-from appbmi.form import BmiUserRegistrationForm, BmiUserLoginForm
+from appbmi.form import BmiUserRegistrationForm, BmiUserLoginForm, BmiUserProfileForm
 
 # model class import
 from appbmi.models import BmiUser, UserBmi, UserDiet
 
 # Create your views here.
+
+# bmi views
+def bmi_index(request):
+    template = 'userbmi/index.html'
+    bmi = UserBmi.objects.all()
+    context = {
+        'data': bmi,
+        'page_title': 'BMI Calculate',
+    }
+    return render(request, template, context)
+
+def bmi_create(request):
+    return render()
+
+def bmi_store(request):
+    return render()
+
+def bmi_edit(request):
+    return render()
+
+def bmi_show(request):
+    return render()
+
+def bmi_delete(request):
+    return render()
 
 # user views
 # email send
@@ -34,6 +59,33 @@ def sendemail(request):
     send_mail(subject, message, email_from, recepient_list)
 
     return redirect('users/index')
+
+def user_profile_upload(request):
+    user = BmiUser.objects.get(user_email=request.session['session_email'])
+    template = 'users/show.html'
+    pf = BmiUserProfileForm
+    if request.method == "POST":
+        form = BmiUserProfileForm(request.POST, request.FILES)
+        user = BmiUser.objects.get(user_email=request.session['session_email'])
+        if form.is_valid():
+            form.save()
+            context = {
+                'page_title': 'BMI | User Profile',
+                'brand': 'BMI',
+                'data': user,
+                'profile_form': pf,
+                'msg_pf_success': 'Uploaded successfully'
+            }
+            return render(request, template, context)
+    else:
+        context = {
+            'page_title': 'BMI | User Profile',
+            'brand': 'BMI',
+            'data': user,
+            'profile_form': pf,
+            'msg_pf_error': 'Something went wrong'
+        }
+        return render(request, template, context)
 
 def user_index(request):
     if request.session.has_key('session_email'):
@@ -70,10 +122,12 @@ def user_profile(request):
     if request.session.has_key('session_email'):
         user = BmiUser.objects.get(user_email=request.session['session_email'])
         template = 'users/show.html'
+        pf = BmiUserProfileForm
         context = {
             'page_title': 'BMI | User Profile',
             'brand': 'BMI',
-            'data': user
+            'data': user,
+            'profile_form': pf
         }
         return render(request, template, context)
     else:

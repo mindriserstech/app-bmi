@@ -1,0 +1,59 @@
+{% extends '../layouts/base.html' %}
+
+<!-- section title -->
+{% block title %}
+{{ page_title }}
+{% endblock %}
+<!-- end of section title -->
+
+<!-- section custom css -->
+{% block custom_css %}
+<style>
+  .dropdown-menu[data-bs-popper] {
+    top: 100%;
+    left: -74px !important;
+    margin-top: .7rem !important;
+  }
+</style>
+{% endblock %}
+<!-- end of section custom css -->
+
+<!-- section content -->
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>BMI Record List</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>SNo</td>
+                    <td>Weight</td>
+                    <td>Height</td>
+                    <td>bmmi_unit</td>
+                    <td>bmi</td>
+                    <td>added_at</td>
+                    <td colspan="3">Action</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in data %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.weight }}</td>
+                    <td>{{ i.height }}</td>
+                    <td>{{ i.bmi_unit }}</td>
+                    <td>{{ i.bmi }}</td>
+                    <td>{{ i.added_at }}</td>
+                    <td>Edit</td>
+                    <td>View</td>
+                    <td>Delete</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+<!-- end of section content -->

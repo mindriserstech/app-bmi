@@ -51,14 +51,23 @@
             <div class="card">
                 <div class="card-header">
                     <img src="https://pbs.twimg.com/media/EISlEQeW4AEbykd?format=jpg&name=medium" alt="Rajesh hamal" class="img-fluid">
-                    <form action="#">
+                    <form action="{% url 'user.upload' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
                         <div class="form-group mb-2">
-                            <label for="file">Update Profile</label>
-                            <input type="file" class="form-control mt-2">
+                            {{ profile_form.as_p }}
                         </div>
                         <div class="form-group mt-2">
                             <input type="submit" value="UPLOAD" class="btn btn-primary">
                         </div>
+                        {% if msg_pf_error %}
+                        <div class="alert alert-danger mt-2">
+                            {{ msg_pf_error }}
+                        </div>
+                        {% elif msg_pf_success %}
+                        <div class="alert alert-success mt-2">
+                            {{ msg_pf_success }}
+                        </div>
+                        {% endif %}
                     </form>
                 </div>
                 <div class="card-body">
