@@ -1,0 +1,37 @@
+{% extends '../layouts/base.html' %}
+
+<!-- section title -->
+{% block title %}
+{{ page_title }}
+{% endblock %}
+<!-- end of section title -->
+
+<!-- section custom css -->
+{% block custom_css %}
+<style>
+  .dropdown-menu[data-bs-popper] {
+    top: 100%;
+    left: -74px !important;
+    margin-top: .7rem !important;
+  }
+</style>
+{% endblock %}
+<!-- end of section custom css -->
+
+<!-- section content -->
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>BMI Record</h4>
+        <a href="{% url 'bmi.index' %}" class="btn btn-primary btn-sm">Back</a>
+    </div>
+    <div class="card-body">
+        <form action="{% url 'bmi.store' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="ADD" class="btn btn-primary btn-sm">
+        </form>
+    </div>
+</div>
+{% endblock %}
+<!-- end of section content -->

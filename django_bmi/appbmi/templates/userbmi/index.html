@@ -23,6 +23,7 @@
 <div class="card">
     <div class="card-header">
         <h4>BMI Record List</h4>
+        <a href="{% url 'bmi.create' %}" class="btn btn-primary btn-sm">Add Your Bmi</a>
     </div>
     <div class="card-body">
         <table class="table table-striped">
@@ -46,10 +47,10 @@
                     <td>{{ i.bmi_unit }}</td>
                     <td>{{ i.bmi }}</td>
                     <td>{{ i.added_at }}</td>
-                    <td>Edit</td>
-                    <td>View</td>
-                    <td>Delete</td>
-                </tr>
+                    <td><a href="{% url 'bmi.edit' i.id %}">Edit</a></td>
+                    <td><a href="{% url 'bmi.show' i.id %}">View</a></td>
+                    <td><a href="{% url 'bmi.delete' i.id %}">Delete</a></td>
+                </tr> 
                 {% endfor %}
             </tbody>
         </table>

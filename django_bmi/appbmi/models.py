@@ -35,7 +35,7 @@ class UserBmi(models.Model):
     height = models.CharField(max_length=20)
     bmi_unit = models.CharField(max_length=10)
     bmi = models.CharField(max_length=20)
-    added_at = models.DateTimeField(null=False)
+    added_at = models.DateTimeField(auto_now_add=True)
     user_id = models.BigIntegerField()
 
     class Meta:

@@ -15,6 +15,7 @@ from appbmi.form import BmiUserRegistrationForm, BmiUserLoginForm, BmiUserProfil
 
 # model class import
 from appbmi.models import BmiUser, UserBmi, UserDiet
+from appbmi.form import UserBmiForm
 
 # Create your views here.
 
@@ -25,23 +26,106 @@ def bmi_index(request):
     context = {
         'data': bmi,
         'page_title': 'BMI Calculate',
+        'brand': 'BMI'
     }
     return render(request, template, context)
 
 def bmi_create(request):
-    return render()
+    template = 'userbmi/create.html'
+    bmiform = UserBmiForm
+    context = {
+        'page_title': 'BMI Record',
+        'form': bmiform,
+        'brand': 'BMI'
+    }
+    return render(request, template, context)
 
 def bmi_store(request):
-    return render()
+    if request.method == "POST":
+        bmi = UserBmi()
+        bmi.weight = request.POST.get('weight')
+        bmi.height = request.POST.get('height')
+        bmi.bmi_unit = request.POST.get('bmi_unit')
+        bmi.bmi = request.POST.get('bmi')
+        bmi.user_id = request.POST.get('user_id')
+        bmi.save()
+        template = 'userbmi/index.html'
+        bmi_data = UserBmi.objects.all()
+        context = {
+            'data': bmi_data,
+            'page_title': 'BMI Calculate',
+            'brand': 'BMI'
+        }
+        return render(request, template, context)
+    else:
+        template = 'userbmi/create.html'
+        bmiform = UserBmiForm
+        context = {
+            'page_title': 'BMI Record',
+            'form': bmiform,
+            'brand': 'BMI'
+        }
+        return render(request, template, context)
 
-def bmi_edit(request):
-    return render()
 
-def bmi_show(request):
-    return render()
+def bmi_edit(request, bmi_id):
+    template = 'userbmi/edit.html'
+    bmiuser = UserBmi.objects.get(id=bmi_id)
+    context = {
+        'page_title': 'BMI Edit',
+        'data': bmiuser,
+        'brand': 'BMI'
+    }
+    return render(request, template, context)
 
-def bmi_delete(request):
-    return render()
+def bmi_update(request):
+    if request.method == "POST":
+        bmi = UserBmi.objects.get(id=request.POST.get('id'))
+        bmi.weight = request.POST.get('weight')
+        bmi.height = request.POST.get('height')
+        bmi.bmi_unit = request.POST.get('bmi_unit')
+        bmi.bmi = request.POST.get('bmi')
+        bmi.user_id = request.POST.get('user_id')
+        bmi.save()
+        template = 'userbmi/index.html'
+        bmi_data = UserBmi.objects.all()
+        context = {
+            'data': bmi_data,
+            'page_title': 'BMI Calculate',
+            'brand': 'BMI'
+        }
+        return render(request, template, context)
+    else:
+        template = 'userbmi/index.html'
+        bmiform = UserBmiForm
+        context = {
+            'page_title': 'BMI Record List',
+            'form': bmiform,
+            'brand': 'BMI'
+        }
+        return render(request, template, context)
+
+def bmi_delete(request, bmi_id):
+    userbmi = UserBmi.objects.get(id=bmi_id)
+    userbmi.delete()
+    bmi_data = UserBmi.objects.all()
+    template = 'userbmi/index.html'
+    context = {
+        'page_title': 'BMI Record List',
+        'brand': 'BMI',
+        'data': bmi_data
+    }
+    return render(request, template, context)
+
+def bmi_show(request, bmi_id):
+    userbmi = UserBmi.objects.get(id=bmi_id)
+    template = 'userbmi/show.html'
+    context = {
+        'page_title': 'BMI Show',
+        'brand': 'BMI',
+        'data': userbmi
+    }
+    return render(request, template, context)
 
 # user views
 # email send

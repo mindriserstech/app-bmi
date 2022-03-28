@@ -1,0 +1,53 @@
+{% extends '../layouts/base.html' %}
+
+<!-- section title -->
+{% block title %}
+{{ page_title }}
+{% endblock %}
+<!-- end of section title -->
+
+<!-- section custom css -->
+{% block custom_css %}
+<style>
+  .dropdown-menu[data-bs-popper] {
+    top: 100%;
+    left: -74px !important;
+    margin-top: .7rem !important;
+  }
+</style>
+{% endblock %}
+<!-- end of section custom css -->
+
+<!-- section content -->
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>BMI Record</h4>
+        <a href="{% url 'bmi.index' %}" class="btn btn-primary btn-sm">Back</a>
+    </div>
+    <div class="card-body">
+        <form action="{% url 'bmi.update' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value="{{ data.id }}" name="id">
+            <div class="form-group">
+                <label for="">Weight</label>
+                <input type="text" class="form-control" value="{{ data.weight }}" name="weight">
+            </div>
+            <div class="form-group">
+                <label for="">Height</label>
+                <input type="text" class="form-control" value="{{ data.height }}" name="height">
+            </div>
+            <div class="form-group">
+                <label for="">BMI Unit</label>
+                <input type="text" class="form-control" value="{{ data.bmi_unit }}" name="bmi_unit">
+            </div>
+            <div class="form-group">
+                <label for="">BMI</label>
+                <input type="text" class="form-control" value="{{ data.bmi }}" name="bmi">
+            </div>
+            <input type="submit" value="Update" class="btn btn-primary btn-sm mt-2">
+        </form>
+    </div>
+</div>
+{% endblock %}
+<!-- end of section content -->

@@ -16,7 +16,8 @@ urlpatterns = [
     path('bmi/', views.bmi_index, name="bmi.index"),
     path('bmi/create', views.bmi_create, name="bmi.create"),
     path('bmi/store', views.bmi_store, name="bmi.store"),
-    path('bmi/edit', views.bmi_edit, name="bmi.edit"),
-    path('bmi/show', views.bmi_show, name="bmi.show"),
-    path('bmi/delete', views.bmi_delete, name="bmi.delete"),
+    path('bmi/edit/<int:bmi_id>', views.bmi_edit, name="bmi.edit"),
+    path('bmi/show/<int:bmi_id>', views.bmi_show, name="bmi.show"),
+    path('bmi/update', views.bmi_update, name="bmi.update"),
+    path('bmi/delete/<int:bmi_id>', views.bmi_delete, name="bmi.delete"),
 ]
